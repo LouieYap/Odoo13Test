@@ -1,0 +1,39 @@
+
+<odoo>
+    <record id="stock_notification_email_template" model="mail.template">
+        <field name="name">Stock Notification</field>
+        <field name="model_id" ref="custom_code.model_stock_warehouse_orderpoint"/>
+        <field name="subject">Stock Notification</field>
+        <field name="email_to">louiehansy@gmail.com</field>
+        <field name="email_from">louiehansy@gmail.com</field>
+        <field name="body_html" type="html">
+            <h3>Products that are below minimum quantity level:</h3>
+            <div class="tem_table" style="display:table;border-top:1px solid;border-left:1px solid;">
+                <div class="tem_trh" style="display:table-header-group;">
+                    <div class="tem_tdh" style="display:table-row;">
+                        <div class="tem_tch" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;"> <font style="background-color:rgb(255, 255, 0);">Product Image</font></div>
+                        <div class="tem_tch" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;"><font style="background-color:rgb(255, 255, 0);">Product Name</font></div>
+                        <div class="tem_tch" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;"><font style="background-color:rgb(255, 255, 0);">Product Code</font></div>
+                        <div class="tem_tch" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;"><font style="background-color:rgb(255, 255, 255);">Quantity</font></div>
+                        <div class="tem_tch" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;">Minimum Quantity Level</div>
+                    </div>
+                </div>
+                <div class="tem_tr" style="display:table-header-group;">
+                        % for orderpoint in object.env['stock.warehouse.orderpoint'].search([]):
+                            % if orderpoint.product_id.qty_available is lessthan(orderpoint.product_min_qty):
+                                <div class="tem_td" style="display:table-row;">
+                                    <div class="tem_tc" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;"><img src="/web/image/product.product/${orderpoint.product_id.id}/image_128" style="width:50px;height: 50px; object-fit: contain;" alt="Product image"/></div>
+                                    <div class="tem_tc" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;"> ${orderpoint.product_id.name}</div>
+                                    <div class="tem_tc" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;"> ${'' if orderpoint.product_id.default_code == False else orderpoint.product_id.default_code}</div>
+                                    <div class="tem_tc" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;"> ${orderpoint.product_id.qty_available}</div>
+                                    <div class="tem_tc" style="display:table-cell;padding: 2px 4px;border-bottom:1px solid;border-right:1px solid;"> ${orderpoint.product_min_qty} </div>
+                                </div>
+                            % endif
+                        % endfor
+                </div>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+</odoo>
